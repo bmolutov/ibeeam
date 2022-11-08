@@ -1,0 +1,12 @@
+.idea
+
+ibeeam/ibeeam/.env
+ibeeam/env/
+ibeeam/venv/
+ibeeam/Docker/init.sql
+ibeeam/ibeeam/__pycache__/
+ibeeam/**/__pycache__/
+ibeeam/data/
+ibeeam/media/
+ibeeam/static/ckeditor
+ibeeam/static/debug_toolbar
