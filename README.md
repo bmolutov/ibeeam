@@ -1,5 +1,6 @@
 # Project for discipline "Backend for high loaded environment"
-## Developers<br/> Imangali Zhumash<br/> Bekzat Molutov<br/> Magzhan Zhumabekov
+## Developers<br/> 
+Imangali Zhumash<br/> Bekzat Molutov<br/> Magzhan Zhumabekov
 
 # Quick start
 ## Ibeeam microservice
