@@ -5,14 +5,14 @@ Project for discipline "Backend for high loaded environment"
 
 # Quick start
 ## Ibeeam microservice
-Go to ibeeam directory then:
-to run Celery: python -m celery -A django_celery worker -l info
-to run Redis server: redis-server
-to run Django dev server: python manage.py runserver
+Go to ibeeam directory then:<br/>
+to run Celery: <code>python -m celery -A django_celery worker -l info</code><br/>
+to run Redis server: <code>redis-server</code><br/>
+to run Django dev server: <code>python manage.py runserver</code><br/>
 
 ## Auxiliary microservice
-Go to auxiliary directory then:
-to run FastAPI dev server: uvicorn main:app --reload
+Go to auxiliary directory then:<br/>
+to run FastAPI dev server: <code>uvicorn main:app --reload</code><br/>
 
 # Setup for running project
 1) Request init.sql file and put it into Docker/ directory
