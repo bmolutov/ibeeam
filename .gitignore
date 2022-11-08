@@ -4,7 +4,10 @@ ibeeam/ibeeam/.env
 ibeeam/env/
 ibeeam/venv/
 ibeeam/Docker/init.sql
+
 ibeeam/ibeeam/__pycache__/
+auxiliary/__pycache__
+
 ibeeam/**/__pycache__/
 ibeeam/data/
 ibeeam/media/
