@@ -3,13 +3,23 @@ Developers: Imangali Zhumash, Bekzat Molutov, Magzhan Zhumabekov
 
 Project for discipline "Backend for high loaded environment"
 
-What is it made for? - News website API.
+# Quick start
+## Ibeeam microservice
+Go to ibeeam directory then:
+to run Celery: python -m celery -A django_celery worker -l info
+to run Redis server: redis-server
+to run Django dev server: python manage.py runserver
+
+## Auxiliary microservice
+Go to auxiliary directory then:
+to run FastAPI dev server: uvicorn main:app --reload
+
 # Setup for running project
 1) Request init.sql file and put it into Docker/ directory
 2) Request .env file and put it into ibeeam/ directory near settings.py file
- 
 The files are hidden for security purposes
 If you have questions, please contact with Bekzat Molutov
+
 # Running commands
 We have created Makefile for defining aliases for django, postgres, docker, docker-compose commands
 
@@ -41,3 +51,5 @@ Here are the django app services that wer are going to implement and support:
 7) Post/Comment reactions service
 8) Post recommendation system
  
+# FastAPI part
+it's empty here for now :)
