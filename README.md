@@ -13,7 +13,7 @@ to run Django dev server: <code>python manage.py runserver</code><br/>
 ## Auxiliary microservice
 It stands for high loaded part of the application.<br/>
 Go to auxiliary directory then:<br/>
-to run FastAPI dev server: <code>uvicorn main:app --reload</code><br/>
+to run FastAPI dev server: <code>uvicorn main:app --reload --host 127.0.0.1 --port 8001</code><br/>
 
 ## Setup for running project
 1) Request init.sql file and put it into Docker/ directory

@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from pathlib import Path
 from datetime import timedelta
-import environ, os
+from pathlib import Path
+
+import environ
+import os
 
 env = environ.Env()
 environ.Env.read_env()
@@ -48,7 +50,6 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'debug_toolbar',
     'rest_framework_simplejwt',
-    'drf_yasg',
     'drf_spectacular',
     'django_celery_results',
     # custom 
