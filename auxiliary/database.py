@@ -9,22 +9,21 @@ users_collection = db.users
 
 
 async def get_user_profile(user_id: str):
-    user = await users_collection.find_one({"_id": user_id})
-    return user
+    user_profile = await users_collection.find_one({"_id": user_id})
+    return user_profile
 
 
 async def list_user_profiles():
-    users = []
+    user_profiles = []
     cursor = users_collection.find({})
     async for document in cursor:
-        users.append(ListUpdateUserProfile(**document))
-    return users
+        user_profiles.append(ListUpdateUserProfile(**document))
+    return user_profiles
 
 
-async def create_user_profile(user):
-    document = user
-    result = await users_collection.insert_one(document)
-    return result
+async def create_user_profile(user_profile):
+    user_profile = await users_collection.insert_one(user_profile)
+    return user_profile
 
 
 async def update_user_profile(user_id, user_profile):
