@@ -1,21 +1,14 @@
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from requests import Session
 
-from database import collection
+from database import collection, database
+import models
 
 app = FastAPI()
 
 
-@app.get("/")
-async def read_root():
-    data = {
-        'first_name': 'bega'
-    }
-    await collection.insert_one(data)
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.post('/user')
+def create_user(request: models.UserProfile):
+    return request
