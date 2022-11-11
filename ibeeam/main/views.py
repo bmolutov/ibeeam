@@ -6,6 +6,7 @@ from main.serializers import UserFeedbackSerializer, AnonFeedbackSerializer
 from main.services import send_email
 
 
+# TODO: take it out to another service
 class FeedbackViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self):
         if self.action == 'send_feedback_by_user':

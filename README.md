@@ -14,6 +14,8 @@ to run Django dev server: <code>python manage.py runserver</code><br/>
 It stands for high loaded part of the application.<br/>
 Go to auxiliary directory then:<br/>
 to run FastAPI dev server: <code>uvicorn main:app --reload --host 127.0.0.1 --port 8001</code><br/>
+to run environment variables: <br/>
+DEBUG=1 MAIN_SERVICE_URL_DEV="http://127.0.0.1:8000" MAIN_SERVICE_URL_PROD="http://127.0.0.1:8000" uvicorn main:app --reload --host 127.0.0.1 --port 8001
 
 ## Setup for running project
 1) Request init.sql file and put it into Docker/ directory
