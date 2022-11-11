@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 
-from models import ListUpdateUserProfile
+from models import ListUserProfile
 
 
 client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
@@ -17,7 +17,7 @@ async def list_user_profiles():
     user_profiles = []
     cursor = users_collection.find({})
     async for document in cursor:
-        user_profiles.append(ListUpdateUserProfile(**document))
+        user_profiles.append(ListUserProfile(**document))
     return user_profiles
 
 

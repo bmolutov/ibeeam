@@ -48,5 +48,5 @@ class CreateGetUpdateUserProfile(BaseModel):
         }
 
 
-class ListUpdateUserProfile(CreateGetUpdateUserProfile):
+class ListUserProfile(CreateGetUpdateUserProfile):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
