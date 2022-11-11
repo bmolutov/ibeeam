@@ -4,12 +4,14 @@ Imangali Zhumash<br/> Bekzat Molutov<br/> Magzhan Zhumabekov
 
 # Quick start
 ## Ibeeam microservice
+It stands for main part of the application.<br/>
 Go to ibeeam directory then:<br/>
 to run Celery: <code>python -m celery -A django_celery worker -l info</code><br/>
 to run Redis server: <code>redis-server</code><br/>
 to run Django dev server: <code>python manage.py runserver</code><br/>
 
 ## Auxiliary microservice
+It stands for high loaded part of the application.<br/>
 Go to auxiliary directory then:<br/>
 to run FastAPI dev server: <code>uvicorn main:app --reload</code><br/>
 
