@@ -9,4 +9,4 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: Union[str, None] = None
+    user_id: Union[str, None] = None

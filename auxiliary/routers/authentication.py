@@ -1,6 +1,7 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 from schemas import LoginSchema, GetUserProfileSchema
 import selectors_
@@ -13,10 +14,9 @@ router = APIRouter(
 )
 
 
-# @router.post('/login', response_model=GetUserProfileSchema)
 @router.post('/login')
-async def login(request: LoginSchema):
-    user_profile = await selectors_.get_user_profile(request.user_id)
+async def login(request: OAuth2PasswordRequestForm = Depends()):
+    user_profile = await selectors_.get_user_profile(request.username)
     if not user_profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

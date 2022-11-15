@@ -1,6 +1,3 @@
-from typing import Optional
-from datetime import date
-
 from bson import ObjectId
 from pydantic import BaseModel, HttpUrl, Field
 from .base import PyObjectId, GenderEnum

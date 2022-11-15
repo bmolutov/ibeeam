@@ -4,3 +4,4 @@ from .user_profile import (
 )
 from .authentication import LoginSchema, GetUserCredSchema
 from .base import PyObjectId
+from .token_ import TokenData

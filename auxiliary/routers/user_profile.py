@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, status, Body
+from fastapi import APIRouter, status, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from bson.json_util import ObjectId
@@ -12,6 +12,7 @@ from schemas import (
     ListUserProfilesSchema, GetUserProfileSchema, CreateUserProfileRequestSchema, CreateUserProfileResponseSchema,
     UpdateUserProfileRequestSchema, UpdateUserProfileResponseSchema
 )
+from oauth2 import get_current_user
 
 
 router = APIRouter(
@@ -30,7 +31,7 @@ async def list_user_profiles():
 
 
 @router.get('/{_id}', response_description="Get user profile", response_model=GetUserProfileSchema)
-async def get_user_profile(user_id: str):
+async def get_user_profile(user_id: str, current_user=Depends(get_current_user)):
     user_profile = await selectors_.get_user_profile(user_id)
     if user_profile:
         return user_profile
@@ -46,7 +47,8 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     user_profile = jsonable_encoder(user_profile)
     # performing create
     new_user_profile = await services_.create_user_profile(user_profile)
-    created_user_profile = await database.user_profiles_collection.find_one({"_id": ObjectId(new_user_profile.inserted_id)})
+    created_user_profile = await database.user_profiles_collection.find_one({"_id": ObjectId(
+        new_user_profile.inserted_id)})
     created_user_profile['_id'] = str(created_user_profile['_id'])
 
     # TODO: give condition
@@ -58,7 +60,8 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
 
 @router.put("/{_id}", response_description="Update user profile",
             response_model=UpdateUserProfileResponseSchema)
-async def update_user_profile(user_id: str, user_profile: UpdateUserProfileRequestSchema):
+async def update_user_profile(user_id: str, user_profile: UpdateUserProfileRequestSchema,
+                              current_user=Depends(get_current_user)):
     user_profile = jsonable_encoder(user_profile)
     updated_user_profile = await services_.update_user_profile(user_id, user_profile)
     if updated_user_profile:
@@ -67,7 +70,7 @@ async def update_user_profile(user_id: str, user_profile: UpdateUserProfileReque
 
 
 @router.delete("/{_id}", response_description="Delete user profile")
-async def delete_user_profile(user_id: str):
+async def delete_user_profile(user_id: str, current_user=Depends(get_current_user)):
     is_deleted = await services_.delete_user_profile(user_id)
     if is_deleted:
         from integration import delete_user
