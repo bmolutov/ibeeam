@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'django_celery_results',
+    'mptt',
     # custom 
     'main.apps.MainConfig',
     'utils.apps.UtilsConfig',

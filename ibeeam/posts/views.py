@@ -9,3 +9,6 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = (PostAuthorOrReadOnly,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def like(self, request, *args, **kwargs):
+        pass

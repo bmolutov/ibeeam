@@ -1,10 +1,12 @@
-from mixins.models import TimestampMixin
-from posts.models import Post
 from django.db import models
 from django.conf import settings
+from mptt.models import MPTTModel, TreeForeignKey
+
+from mixins.models import TimestampMixin
+from posts.models import Post
 
 
-class PostComment(TimestampMixin):
+class Comment(MPTTModel, TimestampMixin):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -15,6 +17,13 @@ class PostComment(TimestampMixin):
         on_delete=models.CASCADE,
         related_name='comments'
     )
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='children'
+    )
     content = models.CharField(
         max_length=2048,
         verbose_name='content'
@@ -24,6 +33,9 @@ class PostComment(TimestampMixin):
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
 
+    class MPTTMeta:
+        order_insertion_by = ['created_at']
+
 
 class CommentReaction(models.Model):
     user = models.ForeignKey(
@@ -32,13 +44,12 @@ class CommentReaction(models.Model):
         related_name='reactions'
     )
     comment = models.ForeignKey(
-        PostComment,
+        Comment,
         on_delete=models.CASCADE,
         related_name='reactions'
     )
-    emoji_url = models.CharField(
-        max_length=512,
-        verbose_name='url'
+    is_liked = models.BooleanField(
+        default=False
     )
 
     class Meta:

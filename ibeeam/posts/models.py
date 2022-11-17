@@ -1,11 +1,9 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import (
-    AbstractBaseUser, PermissionsMixin, AbstractUser
-)
 from django.core.validators import MinValueValidator
 
 from mixins.models import TimestampMixin
+from utils.upload import get_post_image_path
 
 
 class Post(TimestampMixin):
@@ -14,13 +12,20 @@ class Post(TimestampMixin):
         on_delete=models.CASCADE,
         related_name='posts'
     )
+    image = models.ImageField(
+        upload_to=get_post_image_path,
+        blank=True,
+        null=True
+    )
     title = models.CharField(
         max_length=256,
-        verbose_name='title'
+        verbose_name='title',
     )
     content = models.CharField(
         max_length=2048,
-        verbose_name='content'
+        verbose_name='content',
+        blank=True,
+        null=True
     )
     views_count = models.PositiveIntegerField(
         default=0,
@@ -33,22 +38,21 @@ class Post(TimestampMixin):
         verbose_name_plural = 'Posts'
 
 
-class PostTag(models.Model):
+class PostReaction(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='reactions'
+    )
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name='tags'
+        related_name='reactions'
     )
-    title = models.CharField(
-        max_length=256,
-        verbose_name='title'
-    )
-    description = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name='description'
+    is_liked = models.BooleanField(
+        default=False
     )
 
     class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
+        verbose_name = 'Reaction'
+        verbose_name_plural = 'Reactions'
