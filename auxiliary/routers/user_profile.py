@@ -52,8 +52,8 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     created_user_profile['_id'] = str(created_user_profile['_id'])
 
     # TODO: give condition
-    from integration import create_user
-    create_user(created_user_profile['_id'])
+    # from integration import create_user
+    # create_user(created_user_profile['_id'])
 
     return created_user_profile
 
