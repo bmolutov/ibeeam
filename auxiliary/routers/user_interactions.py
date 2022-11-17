@@ -32,16 +32,16 @@ async def unfollow_user(user_id: str, current_user=Depends(get_current_user)):
         return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
     try:
         user_to_unfollow['followers_ids'].remove(current_user.user_id)
+        await services_.update_user_profile(user_to_unfollow['_id'], user_to_unfollow)
     except ValueError:
         return JSONResponse(content=f"Cannot unfollow")
-    await services_.update_user_profile(user_to_unfollow['_id'], user_to_unfollow)
 
     cur_user = await selectors_.get_user_profile(current_user.user_id)
     try:
         cur_user['following_ids'].remove(user_id)
+        await services_.update_user_profile(cur_user['_id'], cur_user)
     except ValueError:
         return JSONResponse(content=f"Cannot unfollow")
-    await services_.update_user_profile(cur_user['_id'], cur_user)
 
 
 @router.post('/block/{_id}', response_description="Block user")
@@ -64,13 +64,21 @@ async def unblock_user(user_id: str, current_user=Depends(get_current_user)):
         return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
     try:
         user_to_unblock['blockers_ids'].remove(current_user.user_id)
+        await services_.update_user_profile(user_to_unblock['_id'], user_to_unblock)
     except ValueError:
         return JSONResponse(content=f"Cannot unblock")
-    await services_.update_user_profile(user_to_unblock['_id'], user_to_unblock)
 
     cur_user = await selectors_.get_user_profile(current_user.user_id)
     try:
         cur_user['blocking_ids'].remove(user_id)
+        await services_.update_user_profile(cur_user['_id'], cur_user)
     except ValueError:
         return JSONResponse(content=f"Cannot unblock")
+
+
+@router.post('/integration/users/{user_id}/favorite_posts/{post_id}',
+             response_description='ONLY FOR INTEGRATION: add post to favorites')
+async def add_post_to_favorites(user_id: str, post_id: int):
+    cur_user = await selectors_.get_user_profile(user_id)
+    cur_user['favorite_posts_ids'].append(post_id)
     await services_.update_user_profile(cur_user['_id'], cur_user)

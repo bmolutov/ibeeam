@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List
 from datetime import date
 
 from bson import ObjectId
@@ -20,6 +20,7 @@ class UserProfileBaseSchema(BaseModel):
     following_ids: List[str] = []
     blockers_ids: List[str] = []
     blocking_ids: List[str] = []
+    favorite_posts_ids: List[int] = []
 
 
 class ListUserProfilesSchema(BaseModel):
