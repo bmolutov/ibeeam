@@ -9,5 +9,6 @@ urlpatterns = [
     path('edit/<int:id>', views.PostViewSet.as_view({'put': 'edit'})),
     path('delete/<int:id>', views.PostViewSet.as_view({'delete': 'delete'})),
 
-    path('like/', views.PostViewSet.as_view({'post': 'like'}))
+    path('like/', views.PostViewSet.as_view({'post': 'like'})),
+    path('users/<int:user_id>/list_favorites/', views.PostViewSet.as_view({'get': 'list_favorites'}))
 ]

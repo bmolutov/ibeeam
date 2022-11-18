@@ -258,6 +258,8 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API made for News service',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    # for allowing file/image upload
+    'COMPONENT_SPLIT_REQUEST': True
     # OTHER SETTINGS
 }
 

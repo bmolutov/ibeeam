@@ -10,7 +10,6 @@ class UserViewSet(viewsets.GenericViewSet):
     serializer_class = UserSerializer
 
     def create_user(self, request, *args, **kwargs):
-        print(self.request.data['profile_id'])
         user = User(
             profile_id=self.request.data['profile_id']
         )

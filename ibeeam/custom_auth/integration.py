@@ -45,3 +45,10 @@ def delete_user_profile(profile_id: str):
         url=f'{AUXILIARY_SERVICE_URL}/delete_user_profile/{profile_id}'
     )
     return response.text
+
+
+def get_favorite_posts_ids(profile_id: str):
+    response = requests.get(
+        url=f'{AUXILIARY_SERVICE_URL}/integration/users/{profile_id}/favorite_posts_ids'
+    )
+    return response.json()

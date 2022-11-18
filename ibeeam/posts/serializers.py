@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from posts.models import Post
+from utils.serializers import Base64ImageField
 
 
 class PostCreateSerializer(serializers.Serializer): # noqa
@@ -47,7 +48,19 @@ class PostUpdateSerializer(serializers.Serializer): # noqa
 class PostListSerializer(serializers.Serializer): # noqa
     id = serializers.IntegerField()
     user_id = serializers.IntegerField()
-    image = serializers.ImageField(
+    # TODO: what to do with this field?
+    # image = serializers.ImageField(
+    #     required=False
+    # )
+    # image = Base64ImageField(
+    #     max_length=None,
+    #     use_url=True,
+    #     required=False,
+    #     allow_empty_file=True,
+    #     allow_null=True
+    # )
+    image = serializers.CharField(
+        max_length=1024,
         required=False
     )
     title = serializers.CharField(
@@ -70,3 +83,11 @@ class PostReactionCreateSerializer(serializers.Serializer): # noqa
 
     def get_user_id(self, obj):
         return self.context.get('request').user.id
+
+
+class FavoritePostsListSerializer(serializers.Serializer): # noqa
+    ids = serializers.ListField(
+        child=serializers.IntegerField(
+            min_value=1
+        )
+    )

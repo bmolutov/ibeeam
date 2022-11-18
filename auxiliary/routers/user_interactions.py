@@ -76,9 +76,24 @@ async def unblock_user(user_id: str, current_user=Depends(get_current_user)):
         return JSONResponse(content=f"Cannot unblock")
 
 
-@router.post('/integration/users/{user_id}/favorite_posts/{post_id}',
-             response_description='ONLY FOR INTEGRATION: add post to favorites')
+@router.post('/users/{user_id}/favorite_posts/add/{post_id}',
+             response_description='add post to favorites')
 async def add_post_to_favorites(user_id: str, post_id: int):
+    # TODO: does post with ID: post_id exist? is it worth checking?
     cur_user = await selectors_.get_user_profile(user_id)
     cur_user['favorite_posts_ids'].append(post_id)
     await services_.update_user_profile(cur_user['_id'], cur_user)
+
+
+@router.post('/users/{user_id}/favorite_posts/remove/{post_id}',
+             response_description='remove post from favorites')
+async def remove_post_from_favorites(user_id: str, post_id: int):
+    cur_user = await selectors_.get_user_profile(user_id)
+    if not cur_user:
+        return JSONResponse(content="User not found", status_code=status.HTTP_404_NOT_FOUND)
+    try:
+        cur_user['favorite_posts_ids'].remove(post_id)
+        await services_.update_user_profile(cur_user['_id'], cur_user)
+    except ValueError:
+        return JSONResponse(content=f"Cannot remove from favorites")
+    return JSONResponse(content=f"Removed successfully")
