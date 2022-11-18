@@ -42,7 +42,7 @@ urlpatterns = [
     path('ibeeam_admin/', ibeeam_site.urls),
 
     path('', include('main.urls')),
-    path('custom_auth/', include('custom_auth.urls')),
+    path('integration/', include('custom_auth.urls')),
     path('comments/', include('comments.urls')),
     path('posts/', include('posts.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
