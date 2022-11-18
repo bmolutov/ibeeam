@@ -2,17 +2,22 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
 from django.core.exceptions import ObjectDoesNotExist
 
 from posts.models import Post, PostReaction
 from posts.serializers import (
-    PostCreateSerializer, PostUpdateSerializer, PostListSerializer, PostReactionCreateSerializer
+    PostCreateSerializer, PostUpdateSerializer, PostListSerializer, PostReactionCreateSerializer,
+    FavoritePostsListSerializer
 )
+from custom_auth.integration import get_favorite_posts_ids
+from custom_auth.models import User
 from posts.permissions import PostAuthorOrReadOnly, PostReactionAuthorOrReadOnly
 
 
 class PostViewSet(viewsets.GenericViewSet):
     lookup_field = 'pk'
+    parser_classes = [MultiPartParser, ]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -91,3 +96,27 @@ class PostViewSet(viewsets.GenericViewSet):
         else:
             instance.update(**serializer.data)
         return Response(status=status.HTTP_200_OK)
+
+    def list_favorites(self, request, *args, **kwargs): # noqa
+        user_id = kwargs.get('user_id', None)
+        # trying to get profile_id using user_id
+        try:
+            profile_id = User.objects.get(id=user_id).profile_id
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # validating list of ids
+        result = get_favorite_posts_ids(profile_id)
+
+        ids_serializer = FavoritePostsListSerializer(data=result)
+        ids_serializer.is_valid(raise_exception=True)
+
+        # getting list of favorite posts
+        serializer = PostListSerializer(
+            data=list(Post.objects.filter(id__in=ids_serializer.data['ids']).values()),
+            many=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        # returning result
+        return Response(serializer.data, status=status.HTTP_200_OK)

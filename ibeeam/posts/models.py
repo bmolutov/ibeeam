@@ -15,7 +15,8 @@ class Post(TimestampMixin):
     image = models.ImageField(
         upload_to=get_post_image_path,
         blank=True,
-        null=True
+        null=True,
+        default=None
     )
     title = models.CharField(
         max_length=256,
