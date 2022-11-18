@@ -41,12 +41,12 @@ class CommentReaction(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='reactions'
+        related_name='own_comment_reactions'
     )
     comment = models.ForeignKey(
         Comment,
         on_delete=models.CASCADE,
-        related_name='reactions'
+        related_name='comment_reactions'
     )
     is_liked = models.BooleanField(
         default=False

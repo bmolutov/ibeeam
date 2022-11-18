@@ -4,8 +4,10 @@ from comments import views
 
 
 urlpatterns = [
-    path('create/', views.PostCommentViewSet.as_view({'post': 'create'})),
-    path('list/', views.PostCommentViewSet.as_view({'get': 'list'})),
-    path('change/', views.PostCommentViewSet.as_view({'put': 'update'})),
-    path('delete/', views.PostCommentViewSet.as_view({'delete': 'destroy'}))
+    path('leave/', views.CommentViewSet.as_view({'post': 'leave'})),
+    path('list/', views.CommentViewSet.as_view({'get': 'list'})),
+    path('update/<int:id>', views.CommentViewSet.as_view({'put': 'update'})),
+    path('delete/<int:id>', views.CommentViewSet.as_view({'delete': 'delete'})),
+
+    path('like/', views.CommentViewSet.as_view({'post': 'like'}))
 ]

@@ -42,12 +42,12 @@ class PostReaction(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='reactions'
+        related_name='own_post_reactions'
     )
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name='reactions'
+        related_name='post_reactions'
     )
     is_liked = models.BooleanField(
         default=False
