@@ -19,3 +19,4 @@ ibeeam/data/
 ibeeam/media/
 ibeeam/static/ckeditor
 ibeeam/static/debug_toolbar
+ibeeam/static
