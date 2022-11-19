@@ -1,4 +1,4 @@
-FROM python:3.9.15
+FROM python:3.10.6
 
 LABEL Author="ibeeam"
 
@@ -9,7 +9,7 @@ WORKDIR /code
 COPY . /code
 
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY init.sh /
 RUN chmod +x /init.sh
