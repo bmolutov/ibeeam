@@ -3,14 +3,16 @@
 ibeeam/ibeeam/.env
 ibeeam/env/
 ibeeam/venv/
-ibeeam/Docker/init.sql
+ibeeam/DB/init.sql
 
 ibeeam/ibeeam/__pycache__/
 auxiliary/__pycache__
-auxiliary/routers/__pycache__/
-auxiliary/schemas/__pycache__/
-auxiliary/selectors_/__pycache__/
-auxiliary/services_/__pycache__/
+auxiliary/app/routers/__pycache__/
+auxiliary/app/schemas/__pycache__/
+auxiliary/app/selectors_/__pycache__/
+auxiliary/app/services_/__pycache__/
+auxiliary/app/__pycache__/
+auxiliary/app/.env
 
 ibeeam/**/__pycache__/
 ibeeam/data/
