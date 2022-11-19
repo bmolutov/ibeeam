@@ -3,7 +3,7 @@ from datetime import timedelta
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from schemas import LoginSchema, GetUserProfileSchema
+from schemas import GetUserProfileSchema
 import selectors_
 from hashing import verify
 from token_ import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token

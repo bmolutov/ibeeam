@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status, Depends
 from starlette.responses import JSONResponse
 
-import selectors_
 import services_
+import selectors_
 from oauth2 import get_current_user
 
 

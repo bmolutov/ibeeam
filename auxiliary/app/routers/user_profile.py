@@ -5,10 +5,10 @@ from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
 from bson.json_util import ObjectId
 
-import selectors_
 import services_
+import selectors_
 import database
-from schemas import (
+from schemas.user_profile import (
     ListUserProfilesSchema, GetUserProfileSchema, CreateUserProfileRequestSchema, CreateUserProfileResponseSchema,
     UpdateUserProfileRequestSchema, UpdateUserProfileResponseSchema
 )
