@@ -16,7 +16,7 @@ from oauth2 import get_current_user
 
 
 router = APIRouter(
-    prefix='/user_profile',
+    prefix='/aux/user_profile',
     tags=['User profile']
 )
 

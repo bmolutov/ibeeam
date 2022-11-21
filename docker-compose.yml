@@ -43,7 +43,7 @@ services:
       context: auxiliary/app/DB
       dockerfile: db.Dockerfile
     volumes:
-      - ./data/db:/var/lib/mongodb/data
+      - ./auxiliary/data/db:/data/db
     ports:
       - "27017:27017"
 
@@ -71,6 +71,7 @@ services:
       - ./ibeeam/static:/static
       - ./ibeeam/media:/media
     ports:
-      - "8002:80"
+      - "80:80"
     depends_on:
       - web
+      - aux

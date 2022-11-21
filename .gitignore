@@ -13,6 +13,7 @@ auxiliary/app/selectors_/__pycache__/
 auxiliary/app/services_/__pycache__/
 auxiliary/app/__pycache__/
 auxiliary/app/.env
+auxiliary/data
 
 ibeeam/**/__pycache__/
 ibeeam/data/

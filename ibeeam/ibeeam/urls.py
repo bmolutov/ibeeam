@@ -25,25 +25,25 @@ from main.admin import ibeeam_site
 
 swagger_urls = [
     # YOUR PATTERNS
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('main/api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('main/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # path('main/api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
+    # path('admin/', admin.site.urls),
+    # path('api-auth/', include('rest_framework.urls')),
 
-    path('login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('login/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('ibeeam_admin/', ibeeam_site.urls),
+    path('main/login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('main/login/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('main/ibeeam_admin/', ibeeam_site.urls),
 
-    path('', include('main.urls')),
-    path('integration/', include('custom_auth.urls')),
-    path('comments/', include('comments.urls')),
-    path('posts/', include('posts.urls'))
+    path('main/', include('main.urls')),
+    path('main/integration/', include('custom_auth.urls')),
+    path('main/comments/', include('comments.urls')),
+    path('main/posts/', include('posts.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
               static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
@@ -52,4 +52,4 @@ urlpatterns += swagger_urls
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [path('__debug__/', include('debug_toolbar.urls')),]
+    urlpatterns += [path('main/__debug__/', include('debug_toolbar.urls')),]
