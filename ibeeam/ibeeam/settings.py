@@ -185,17 +185,18 @@ SIMPLE_JWT = {
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Ibeeam API',
-    'DESCRIPTION': 'API made for News service',
+    'TITLE': 'Ibeeam',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     # for allowing file/image upload
-    'COMPONENT_SPLIT_REQUEST': True
+    'COMPONENT_SPLIT_REQUEST': True,
     # OTHER SETTINGS
+    # 'SCHEMA_PATH_PREFIX_INSERT': 'main',
 }
 
 
 # Celery settings
+# TODO: resolve url for prod
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
