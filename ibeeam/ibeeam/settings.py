@@ -196,6 +196,7 @@ SPECTACULAR_SETTINGS = {
 
 
 # Celery settings
+# TODO: resolve url for prod
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 

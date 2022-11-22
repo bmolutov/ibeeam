@@ -23,8 +23,10 @@ services:
       - ./ibeeam:/code
       - ./ibeeam/static:/static
       - ./ibeeam/media:/media
-    ports:
-      - "8000:8000"
+#    ports:
+#      - "8000:8000"
+    expose:
+      - 8000
     env_file:
       - ibeeam/ibeeam/.env
     depends_on:
@@ -55,8 +57,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./auxiliary/app:/code
-    ports:
-      - "8001:8001"
+#    ports:
+#      - "8001:8001"
+    expose:
+      - 8001
     depends_on:
       - mongodb
 
