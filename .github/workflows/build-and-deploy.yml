@@ -122,6 +122,7 @@ jobs:
             docker run -d \
             --restart always \
             --name $(echo $DB_IMAGE_NAME) \
+            --env-file /root/web/.env \
             $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
             # MONGODB
