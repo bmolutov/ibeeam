@@ -17,11 +17,11 @@ on:
 #2
 env:
   REGISTRY: "registry.digitalocean.com/ibeeam"
-  WEB_IMAGE_NAME: "ibeeam-web:latest"
-  AUX_IMAGE_NAME: "ibeeam-aux:latest"
-  DB_IMAGE_NAME: "ibeeam-db:latest"
-  MONGODB_IMAGE_NAME: "ibeeam-mongodb:latest"
-  NGINX_IMAGE_NAME: "ibeeam-nginx:latest"
+  WEB_IMAGE_NAME: "ibeeam-web"
+  AUX_IMAGE_NAME: "ibeeam-aux"
+  DB_IMAGE_NAME: "ibeeam-db"
+  MONGODB_IMAGE_NAME: "ibeeam-mongodb"
+  NGINX_IMAGE_NAME: "ibeeam-nginx"
 
 #3
 jobs:
