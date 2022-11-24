@@ -34,13 +34,13 @@ jobs:
       - name: Build container WEB image
         run: docker build -t $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) ./ibeeam
       - name: Build container AUX image
-        run: docker build -t $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) ./auxiliary
       - name: Build container DB image
-        run: docker build -t $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) ./ibeeam/DB
       - name: Build container MONGODB image
-        run: docker build -t $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) ./auxiliary/app/DB
       - name: Build container NGINX image
-        run: docker build -t $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) ./ibeeam/nginx
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
