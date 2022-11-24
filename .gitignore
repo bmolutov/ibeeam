@@ -1,9 +1,11 @@
 .idea
 
 ibeeam/ibeeam/.env
+auxiliary/app/.env
+#ibeeam/DB/init.sql
+
 ibeeam/env/
 ibeeam/venv/
-ibeeam/DB/init.sql
 
 ibeeam/ibeeam/__pycache__/
 auxiliary/__pycache__
@@ -12,7 +14,6 @@ auxiliary/app/schemas/__pycache__/
 auxiliary/app/selectors_/__pycache__/
 auxiliary/app/services_/__pycache__/
 auxiliary/app/__pycache__/
-auxiliary/app/.env
 auxiliary/data
 
 ibeeam/**/__pycache__/
