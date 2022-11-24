@@ -7,7 +7,7 @@ environ.Env.read_env()
 
 
 AUXILIARY_SERVICE_URL = str(env('AUXILIARY_SERVICE_URL_DEV')) \
-    if bool(env('DEBUG')) else str(env('AUXILIARY_SERVICE_URL_PROD'))
+    if bool(env('WEB_DEBUG')) else str(env('AUXILIARY_SERVICE_URL_PROD'))
 
 
 def list_user_profiles():
