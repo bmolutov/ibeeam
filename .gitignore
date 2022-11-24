@@ -1,7 +1,7 @@
 .idea
 
-ibeeam/ibeeam/.env
-auxiliary/app/.env
+#ibeeam/ibeeam/.env
+#auxiliary/app/.env
 #ibeeam/DB/init.sql
 
 ibeeam/env/
