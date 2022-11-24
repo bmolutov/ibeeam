@@ -110,6 +110,7 @@ jobs:
             docker run -d \
             --restart always \
             --name $(echo $AUX_IMAGE_NAME) \
+            --env-file /root/aux/.env \
             $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
             
             # DB
