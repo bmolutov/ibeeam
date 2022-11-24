@@ -1,0 +1,228 @@
+#name: CI & CD
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#
+#jobs:
+#  build-and-deploy-web:
+#    name: Build and Deploy "web"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the repo
+#        uses: actions/checkout@v3
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          repository: bmolutov/ibeeam-web
+#          dockerfile: ibeeam/Dockerfile
+#          tags: latest
+#
+#  build-and-deploy-aux:
+#    name: Build and Deploy "aux"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the repo
+#        uses: actions/checkout@v3
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          repository: bmolutov/ibeeam-aux
+#          dockerfile: auxiliary/Dockerfile
+#          tags: latest
+#
+#  build-and-deploy-db:
+#    name: Build and Deploy "db"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the repo
+#        uses: actions/checkout@v3
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          repository: bmolutov/ibeeam-db
+#          dockerfile: ibeeam/DB/Dockerfile
+#          tags: latest
+#
+#  build-and-deploy-mongodb:
+#    name: Build and Deploy "mongodb"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the repo
+#        uses: actions/checkout@v3
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          repository: bmolutov/ibeeam-mongodb
+#          dockerfile: auxiliary/app/DB/Dockerfile
+#          tags: latest
+#
+#  build-and-deploy-nginx:
+#    name: Build and Deploy "nginx"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout the repo
+#        uses: actions/checkout@v3
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@v3
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          repository: bmolutov/ibeeam-nginx
+#          dockerfile: ibeeam/nginx/Dockerfile
+#          tags: latest
+
+name: CI
+
+# 1
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the master branch
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+#  workflow_dispatch:
+#    inputs:
+#      version:
+#        description: 'Image version'
+#        required: true
+
+#2
+env:
+  REGISTRY: "registry.digitalocean.com/ibeeam"
+  WEB_IMAGE_NAME: "bmolutov/ibeeam-web:latest"
+  AUX_IMAGE_NAME: "bmolutov/ibeeam-aux:latest"
+  DB_IMAGE_NAME: "bmolutov/ibeeam-db:latest"
+  MONGODB_IMAGE_NAME: "bmolutov/ibeeam-mongodb:latest"
+  NGINX_IMAGE_NAME: "bmolutov/ibeeam-nginx:latest"
+
+#3
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Build container WEB image
+        run: docker build -t $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      - name: Build container AUX image
+        run: docker build -t $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      - name: Build container DB image
+        run: docker build -t $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      - name: Build container MONGODB image
+        run: docker build -t $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      - name: Build container NGINX image
+        run: docker build -t $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Remove all old images (WEB)
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $WEB_IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $WEB_IMAGE_NAME) $(doctl registry repository list-tags $(echo $WEB_IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+      - name: Remove all old images (AUX)
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $AUX_IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $AUX_IMAGE_NAME) $(doctl registry repository list-tags $(echo $AUX_IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+      - name: Remove all old images (DB)
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $DB_IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $DB_IMAGE_NAME) $(doctl registry repository list-tags $(echo $DB_IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+      - name: Remove all old images (MONGODB)
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $MONGODB_IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $MONGODB_IMAGE_NAME) $(doctl registry repository list-tags $(echo $MONGODB_IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+      - name: Remove all old images (NGINX)
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $NGINX_IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $NGINX_IMAGE_NAME) $(doctl registry repository list-tags $(echo $NGINX_IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+
+      - name: Push image to DigitalOcean Container Registry (WEB)
+        run: docker push $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+      - name: Push image to DigitalOcean Container Registry (AUX)
+        run: docker push $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+      - name: Push image to DigitalOcean Container Registry (DB)
+        run: docker push $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+      - name: Push image to DigitalOcean Container Registry (MONGODB)
+        run: docker push $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+      - name: Push image to DigitalOcean Container Registry (NGINX)
+        run: docker push $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          envs: WEB_IMAGE_NAME,AUX_IMAGE_NAME,DB_IMAGE_NAME,MONGODB_IMAGE_NAME,NGINX_IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
+          script: |
+            # Login to registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            
+            # WEB
+            # Stop running container
+            docker stop $(echo $WEB_IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $WEB_IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $WEB_IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            
+            # AUX
+            # Stop running container
+            docker stop $(echo $AUX_IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $AUX_IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $AUX_IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            
+            # DB
+            # Stop running container
+            docker stop $(echo $DB_IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $DB_IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $DB_IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+
+            # MONGODB
+            # Stop running container
+            docker stop $(echo $MONGODB_IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $MONGODB_IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $MONGODB_IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+
+            # NGINX
+            # Stop running container
+            docker stop $(echo $NGINX_IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $NGINX_IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $NGINX_IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
