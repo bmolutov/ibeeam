@@ -17,11 +17,11 @@ on:
 #2
 env:
   REGISTRY: "registry.digitalocean.com/ibeeam"
-  WEB_IMAGE_NAME: "bmolutov/ibeeam-web:latest"
-  AUX_IMAGE_NAME: "bmolutov/ibeeam-aux:latest"
-  DB_IMAGE_NAME: "bmolutov/ibeeam-db:latest"
-  MONGODB_IMAGE_NAME: "bmolutov/ibeeam-mongodb:latest"
-  NGINX_IMAGE_NAME: "bmolutov/ibeeam-nginx:latest"
+  WEB_IMAGE_NAME: "ibeeam-web:latest"
+  AUX_IMAGE_NAME: "ibeeam-aux:latest"
+  DB_IMAGE_NAME: "ibeeam-db:latest"
+  MONGODB_IMAGE_NAME: "ibeeam-mongodb:latest"
+  NGINX_IMAGE_NAME: "ibeeam-nginx:latest"
 
 #3
 jobs:
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build container WEB image
-        run: sudo docker build -t $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
       - name: Build container AUX image
         run: docker build -t $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
       - name: Build container DB image
