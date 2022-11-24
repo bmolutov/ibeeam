@@ -98,6 +98,7 @@ jobs:
             docker run -d \
             --restart always \
             --name $(echo $WEB_IMAGE_NAME) \
+            --env-file /root/web/.env \
             $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
             
             # AUX

@@ -3,7 +3,7 @@ import motor.motor_asyncio
 from settings import settings
 
 
-client = motor.motor_asyncio.AsyncIOMotorClient(settings.DATABASE_URL)
+client = motor.motor_asyncio.AsyncIOMotorClient(settings.MONGO_DATABASE_URL)
 
 db = client[settings.MONGO_INITDB_DATABASE]
 
