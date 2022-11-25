@@ -7,8 +7,8 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-db:latest
     build:
-      - context: ./ibeeam/DB
-      - dockerfile: Dockerfile
+      context: ./ibeeam/DB
+      dockerfile: Dockerfile
     volumes:
       - ./ibeeam/data/db:/var/lib/postgresql/data
 #    env_file:
@@ -21,8 +21,8 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-web:latest
     build:
-      - context: ./ibeeam
-      - dockerfile: Dockerfile
+      context: ./ibeeam
+      dockerfile: Dockerfile
     volumes:
       - ./ibeeam:/code
       - ./ibeeam/static:/static
@@ -41,8 +41,8 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-mongodb:latest
     build:
-      - context: ./auxiliary/DB
-      - dockerfile: Dockerfile
+      context: ./auxiliary/DB
+      dockerfile: Dockerfile
     volumes:
       - ./auxiliary/data/db:/data/db
     ports:
@@ -55,8 +55,8 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-aux:latest
     build:
-      - context: ./auxiliary
-      - dockerfile: Dockerfile
+      context: ./auxiliary
+      dockerfile: Dockerfile
     volumes:
       - ./auxiliary/app:/code
     expose:
@@ -71,8 +71,8 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-nginx:latest
     build:
-      - context: ./ibeeam/nginx
-      - dockerfile: Dockerfile
+      context: ./ibeeam/nginx
+      dockerfile: Dockerfile
     volumes:
       - ./ibeeam/nginx/conf.d/:/etc/nginx/conf.d/
       - ./ibeeam/static:/static
