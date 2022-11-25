@@ -41,7 +41,7 @@ services:
     restart: always
 #    image: index.docker.io/bmolutov/ibeeam-mongodb:latest
     build:
-      context: ./auxiliary/DB
+      context: ./auxiliary/app/DB
       dockerfile: Dockerfile
     volumes:
       - ./auxiliary/data/db:/data/db
