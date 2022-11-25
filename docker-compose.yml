@@ -5,7 +5,10 @@ services:
   db:
     container_name: postgres
     restart: always
-    image: index.docker.io/bmolutov/ibeeam-db:latest
+#    image: index.docker.io/bmolutov/ibeeam-db:latest
+    build:
+      - context: ./ibeeam/DB
+      - dockerfile: Dockerfile
     volumes:
       - ./ibeeam/data/db:/var/lib/postgresql/data
 #    env_file:
@@ -16,7 +19,10 @@ services:
   web:
     container_name: django
     restart: always
-    image: index.docker.io/bmolutov/ibeeam-web:latest
+#    image: index.docker.io/bmolutov/ibeeam-web:latest
+    build:
+      - context: ./ibeeam
+      - dockerfile: Dockerfile
     volumes:
       - ./ibeeam:/code
       - ./ibeeam/static:/static
@@ -33,7 +39,10 @@ services:
   mongodb:
     container_name: mongodb
     restart: always
-    image: index.docker.io/bmolutov/ibeeam-mongodb:latest
+#    image: index.docker.io/bmolutov/ibeeam-mongodb:latest
+    build:
+      - context: ./auxiliary/DB
+      - dockerfile: Dockerfile
     volumes:
       - ./auxiliary/data/db:/data/db
     ports:
@@ -44,7 +53,10 @@ services:
   aux:
     container_name: fastapi
     restart: always
-    image: index.docker.io/bmolutov/ibeeam-aux:latest
+#    image: index.docker.io/bmolutov/ibeeam-aux:latest
+    build:
+      - context: ./auxiliary
+      - dockerfile: Dockerfile
     volumes:
       - ./auxiliary/app:/code
     expose:
@@ -57,7 +69,10 @@ services:
   nginx:
     container_name: nginx
     restart: always
-    image: index.docker.io/bmolutov/ibeeam-nginx:latest
+#    image: index.docker.io/bmolutov/ibeeam-nginx:latest
+    build:
+      - context: ./ibeeam/nginx
+      - dockerfile: Dockerfile
     volumes:
       - ./ibeeam/nginx/conf.d/:/etc/nginx/conf.d/
       - ./ibeeam/static:/static
