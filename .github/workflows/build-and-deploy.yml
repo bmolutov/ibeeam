@@ -72,77 +72,77 @@ jobs:
       - name: Push image to DigitalOcean Container Registry (NGINX)
         run: docker push $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build_and_push
-
-    steps:
-      - name: Deploy to Digital Ocean droplet via SSH action
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          envs: WEB_IMAGE_NAME,AUX_IMAGE_NAME,DB_IMAGE_NAME,MONGODB_IMAGE_NAME,NGINX_IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
-          script: |
-            # Login to registry
-            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
-            
-            # WEB
-            # Stop running container
-            docker stop $(echo $WEB_IMAGE_NAME)
-            # Remove old container
-            docker rm $(echo $WEB_IMAGE_NAME)
-            # Run a new container from a new image
-            docker run -d \
-            --restart always \
-            --name $(echo $WEB_IMAGE_NAME) \
-            --env-file /root/web/.env \
-            $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-            
-            # AUX
-            # Stop running container
-            docker stop $(echo $AUX_IMAGE_NAME)
-            # Remove old container
-            docker rm $(echo $AUX_IMAGE_NAME)
-            # Run a new container from a new image
-            docker run -d \
-            --restart always \
-            --name $(echo $AUX_IMAGE_NAME) \
-            --env-file /root/aux/.env \
-            $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-            
-            # DB
-            # Stop running container
-            docker stop $(echo $DB_IMAGE_NAME)
-            # Remove old container
-            docker rm $(echo $DB_IMAGE_NAME)
-            # Run a new container from a new image
-            docker run -d \
-            --restart always \
-            --name $(echo $DB_IMAGE_NAME) \
-            --env-file /root/web/.env \
-            $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-
-            # MONGODB
-            # Stop running container
-            docker stop $(echo $MONGODB_IMAGE_NAME)
-            # Remove old container
-            docker rm $(echo $MONGODB_IMAGE_NAME)
-            # Run a new container from a new image
-            docker run -d \
-            --restart always \
-            --name $(echo $MONGODB_IMAGE_NAME) \
-            $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-
-            # NGINX
-            # Stop running container
-            docker stop $(echo $NGINX_IMAGE_NAME)
-            # Remove old container
-            docker rm $(echo $NGINX_IMAGE_NAME)
-            # Run a new container from a new image
-            docker run -d \
-            --restart always \
-            --name $(echo $NGINX_IMAGE_NAME) \
-            $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build_and_push
+#
+#    steps:
+#      - name: Deploy to Digital Ocean droplet via SSH action
+#        uses: appleboy/ssh-action@v0.1.5
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          key: ${{ secrets.SSHKEY }}
+#          passphrase: ${{ secrets.PASSPHRASE }}
+#          envs: WEB_IMAGE_NAME,AUX_IMAGE_NAME,DB_IMAGE_NAME,MONGODB_IMAGE_NAME,NGINX_IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
+#          script: |
+#            # Login to registry
+#            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+#
+#            # WEB
+#            # Stop running container
+#            docker stop $(echo $WEB_IMAGE_NAME)
+#            # Remove old container
+#            docker rm $(echo $WEB_IMAGE_NAME)
+#            # Run a new container from a new image
+#            docker run -d \
+#            --restart always \
+#            --name $(echo $WEB_IMAGE_NAME) \
+#            --env-file /root/web/.env \
+#            $(echo $REGISTRY)/$(echo $WEB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#
+#            # AUX
+#            # Stop running container
+#            docker stop $(echo $AUX_IMAGE_NAME)
+#            # Remove old container
+#            docker rm $(echo $AUX_IMAGE_NAME)
+#            # Run a new container from a new image
+#            docker run -d \
+#            --restart always \
+#            --name $(echo $AUX_IMAGE_NAME) \
+#            --env-file /root/aux/.env \
+#            $(echo $REGISTRY)/$(echo $AUX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#
+#            # DB
+#            # Stop running container
+#            docker stop $(echo $DB_IMAGE_NAME)
+#            # Remove old container
+#            docker rm $(echo $DB_IMAGE_NAME)
+#            # Run a new container from a new image
+#            docker run -d \
+#            --restart always \
+#            --name $(echo $DB_IMAGE_NAME) \
+#            --env-file /root/web/.env \
+#            $(echo $REGISTRY)/$(echo $DB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#
+#            # MONGODB
+#            # Stop running container
+#            docker stop $(echo $MONGODB_IMAGE_NAME)
+#            # Remove old container
+#            docker rm $(echo $MONGODB_IMAGE_NAME)
+#            # Run a new container from a new image
+#            docker run -d \
+#            --restart always \
+#            --name $(echo $MONGODB_IMAGE_NAME) \
+#            $(echo $REGISTRY)/$(echo $MONGODB_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#
+#            # NGINX
+#            # Stop running container
+#            docker stop $(echo $NGINX_IMAGE_NAME)
+#            # Remove old container
+#            docker rm $(echo $NGINX_IMAGE_NAME)
+#            # Run a new container from a new image
+#            docker run -d \
+#            --restart always \
+#            --name $(echo $NGINX_IMAGE_NAME) \
+#            $(echo $REGISTRY)/$(echo $NGINX_IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
