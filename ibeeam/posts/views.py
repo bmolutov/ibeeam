@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, filters
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -120,3 +120,16 @@ class PostViewSet(viewsets.GenericViewSet):
 
         # returning result
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class SearchPostView(generics.ListAPIView):
+    pagination_class = None
+    serializer_class = PostListSerializer
+    search_fields = ['title']
+    filter_backends = (filters.SearchFilter,)
+    permission_classes = [IsAuthenticated, ]
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        pattern = self.request.query_params.get('pattern')
+        if pattern is not None:
+            queryset = queryset.filter(title__contains=pattern)
+        return queryset.order_by('-updated_at')

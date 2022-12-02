@@ -52,7 +52,9 @@ Here are the django app services that wer are going to implement and support:
 5) Search history system
 6) Post author profile service 
 7) Post/Comment reactions service
-8) Post recommendation system
+8) Following user
+9) Blocking user
+10) Favorites
  
 ## FastAPI part
 it's empty here for now :)
