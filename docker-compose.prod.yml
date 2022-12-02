@@ -1,0 +1,65 @@
+#version: "3.3"
+#
+#services:
+#
+#  db:
+#    container_name: postgres
+#    restart: always
+#    image: index.docker.io/bmolutov/ibeeam-db:latest
+#    volumes:
+#      - ./ibeeam/data/db:/var/lib/postgresql/data
+#    env_file:
+#      - /root/web/.env
+#
+#  web:
+#    container_name: django
+#    restart: always
+#    image: index.docker.io/bmolutov/ibeeam-web:latest
+#    volumes:
+#      - ./ibeeam:/code
+#      - ./ibeeam/static:/static
+#      - ./ibeeam/media:/media
+#    expose:
+#      - 8000
+#    env_file:
+#      - /root/web/.env
+#    depends_on:
+#      - db
+#
+#  mongodb:
+#    container_name: mongodb
+#    restart: always
+#    image: index.docker.io/bmolutov/ibeeam-mongodb:latest
+#    volumes:
+#      - ./auxiliary/data/db:/data/db
+#    ports:
+#      - "27017:27017"
+#    env_file:
+#      - /root/aux/.env
+#
+#  aux:
+#    container_name: fastapi
+#    restart: always
+#    image: index.docker.io/bmolutov/ibeeam-aux:latest
+#    volumes:
+#      - ./auxiliary/app:/code
+#    expose:
+#      - 8001
+#    depends_on:
+#      - mongodb
+#    env_file:
+#      - /root/aux/.env
+#
+#  nginx:
+#    container_name: nginx
+#    restart: always
+#    image: index.docker.io/bmolutov/ibeeam-nginx:latest
+#    volumes:
+#      - ./ibeeam/nginx/conf.d/:/etc/nginx/conf.d/
+#      - ./ibeeam/static:/static
+#      - ./ibeeam/media:/media
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - web
+#      - aux

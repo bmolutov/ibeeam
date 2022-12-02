@@ -102,8 +102,7 @@ DATABASES = {
         'NAME': env('DATABASE_NAME'),
         'USER': env('DATABASE_USER'),
         'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': env('DATABASE_HOST') if not DEBUG else 'localhost',
-        # 'HOST': env('DATABASE_HOST'),
+        'HOST': env('DATABASE_HOST'),
         'PORT': env('DATABASE_PORT'),
     }
 }
@@ -196,9 +195,9 @@ SPECTACULAR_SETTINGS = {
 
 
 # Celery settings
-# TODO: resolve url for prod
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+
 
 # Celery Configuration Options
 CELERY_TIMEZONE = "Asia/Almaty"
@@ -207,12 +206,9 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 
 # Mailing
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-# Custom setting. To email
-RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')

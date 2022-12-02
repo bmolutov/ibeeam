@@ -1,0 +1,4 @@
+CREATE USER ibeeam WITH PASSWORD 'pingpong';
+CREATE DATABASE ibeeam;
+
+GRANT ALL PRIVILEGES ON DATABASE ibeeam TO ibeeam;

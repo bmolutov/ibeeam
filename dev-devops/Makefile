@@ -17,23 +17,23 @@ help:
 	@echo "********************"
 
 start:
-	@docker-compose up -d
+	@sudo docker-compose -f ../docker-compose.dev.yml up -d
 
 stop:
-	@docker-compose down
+	@sudo docker-compose -f ../docker-compose.dev.yml down
 
 status:
-	@docker-compose ps
+	@sudo docker-compose -f ../docker-compose.dev.yml ps
 
 restart: stop start
 
 web-cli:
-	@docker exec -it django bash
+	@sudo docker exec -it django bash
 
 db-cli:
-	@docker exec -it postgres bash
+	@sudo docker exec -it postgres bash
 
 logs:
-	@docker-compose logs -f
+	@sudo docker-compose -f ../docker-compose.dev.yml logs -f
 
 .PHONY: start stop status restart web-cli db-cli logs
