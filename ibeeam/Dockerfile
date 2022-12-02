@@ -1,15 +1,15 @@
-FROM python:3.10.6
+FROM python:3.10-alpine
 
 LABEL Author="ibeeam"
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /code
-COPY . /code
+WORKDIR /usr/src/app/ibeeam
+COPY requirements.txt /
 
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install -r /requirements.txt
 
 COPY init.sh /
 RUN chmod +x /init.sh

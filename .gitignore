@@ -2,7 +2,7 @@
 
 ibeeam/ibeeam/.env
 auxiliary/app/.env
-#ibeeam/DB/init.sql
+#ibeeam/pgdb/init.sql
 
 ibeeam/env/
 ibeeam/venv/
@@ -22,3 +22,5 @@ ibeeam/media/
 ibeeam/static/ckeditor
 ibeeam/static/debug_toolbar
 ibeeam/static
+
+cache/
