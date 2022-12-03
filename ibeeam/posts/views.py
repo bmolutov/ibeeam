@@ -11,7 +11,7 @@ from posts.serializers import (
     FavoritePostsListSerializer
 )
 from custom_auth.integration import get_favorite_posts_ids
-from custom_auth.models import User
+from django.contrib.auth.models import User
 from posts.permissions import PostAuthorOrReadOnly, PostReactionAuthorOrReadOnly
 
 
@@ -98,15 +98,15 @@ class PostViewSet(viewsets.GenericViewSet):
         return Response(status=status.HTTP_200_OK)
 
     def list_favorites(self, request, *args, **kwargs): # noqa
-        user_id = kwargs.get('user_id', None)
-        # trying to get profile_id using user_id
+        username = kwargs.get('username', None)
+        # trying to get username using user_id
         try:
-            profile_id = User.objects.get(id=user_id).profile_id
+            User.objects.get(username=username).username
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         # validating list of ids
-        result = get_favorite_posts_ids(profile_id)
+        result = get_favorite_posts_ids(username)
 
         ids_serializer = FavoritePostsListSerializer(data=result)
         ids_serializer.is_valid(raise_exception=True)
@@ -121,12 +121,14 @@ class PostViewSet(viewsets.GenericViewSet):
         # returning result
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class SearchPostView(generics.ListAPIView):
     pagination_class = None
     serializer_class = PostListSerializer
     search_fields = ['title']
     filter_backends = (filters.SearchFilter,)
     permission_classes = [IsAuthenticated, ]
+
     def get_queryset(self):
         queryset = Post.objects.all()
         pattern = self.request.query_params.get('pattern')

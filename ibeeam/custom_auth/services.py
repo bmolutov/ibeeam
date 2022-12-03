@@ -1,8 +1,8 @@
-from custom_auth.models import User
+from django.contrib.auth.models import User
 
 
-def delete_user(profile_id):
-    user = User.objects.filter(profile_id=profile_id).first()
+def delete_user(username):
+    user = User.objects.filter(username=username).first()
     if not user:
         return False
     user.delete()

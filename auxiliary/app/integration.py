@@ -9,7 +9,7 @@ def create_user(username: str, password: str):
     is_deleted_sync = True
     try:
         response = requests.post(
-            url=f'{MAIN_SERVICE_URL}/custom_auth/integration/create_user/',
+            url=f'{MAIN_SERVICE_URL}/integration/create_user/',
             json={
                 'username': username,
                 'password': password
@@ -28,7 +28,7 @@ def delete_user(username: str):
     is_deleted_sync = True
     try:
         response = requests.delete(
-            url=f'{MAIN_SERVICE_URL}/custom_auth/integration/delete_user/{username}'
+            url=f'{MAIN_SERVICE_URL}/integration/delete_user/{username}'
         )
         response.raise_for_status()
         message = response.text

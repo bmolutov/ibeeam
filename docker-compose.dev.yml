@@ -77,6 +77,8 @@ services:
       - ./auxiliary/app:/usr/src/app/auxiliary
     ports:
       - '8001:8001'
+    env_file:
+      - ./auxiliary/app/.env
     depends_on:
       - mongodb
       - cache

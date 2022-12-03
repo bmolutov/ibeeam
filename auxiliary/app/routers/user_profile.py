@@ -1,4 +1,5 @@
 from typing import List
+import logging
 
 from fastapi import APIRouter, status, Body, Depends
 from fastapi.encoders import jsonable_encoder
@@ -57,9 +58,13 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     created_user_profile['_id'] = str(created_user_profile['_id'])
 
     # TODO: give condition
-    # from integration import create_user
-    # create_user(created_user_profile['_id'])
-
+    import os
+    from integration import create_user
+    is_deleted_sync, message = create_user(
+        created_user_profile['username'],
+        created_user_profile['password']
+    )
+    logging.info(is_deleted_sync, message)
     return created_user_profile
 
 
@@ -79,8 +84,8 @@ async def delete_user_profile(username: str, current_user=Depends(get_current_us
     is_deleted = await services_.delete_user_profile(username)
     if is_deleted:
         # TODO: fix sync
-        # from integration import delete_user
-        # result, message = delete_user(username)
-        result, message = 0, 0
+        from integration import delete_user
+        result, message = delete_user(username)
+        logging.info(result, message)
         return JSONResponse(content=f"Is deleted successfully = {result}, message = {message}")
     return JSONResponse(content=f"There is no object with such ID")

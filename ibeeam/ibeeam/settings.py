@@ -158,7 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # defining new User 
-AUTH_USER_MODEL = 'custom_auth.User'
+# AUTH_USER_MODEL = 'custom_auth.User'
 
 
 # django debug toolbar

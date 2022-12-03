@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from .serializers import UserSerializer
 from .services import delete_user
-from custom_auth.models import User
+from django.contrib.auth.models import User
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -11,13 +11,14 @@ class UserViewSet(viewsets.GenericViewSet):
 
     def create_user(self, request, *args, **kwargs):
         user = User(
-            profile_id=self.request.data['profile_id']
+            username=self.request.data['username'],
+            password=self.request.data['password']
         )
         user.save()
-        return Response(user.profile_id, status=status.HTTP_201_CREATED)
+        return Response(user.username, status=status.HTTP_201_CREATED)
 
     def delete_user(self, request, *args, **kwargs):
-        is_deleted = delete_user(self.kwargs['profile_id'])
+        is_deleted = delete_user(self.kwargs['username'])
         if is_deleted:
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
