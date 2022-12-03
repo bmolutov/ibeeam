@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt import views as jwt_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
+import custom_auth.views
 from main.admin import ibeeam_site
 
 
@@ -36,8 +37,10 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     # path('api-auth/', include('rest_framework.urls')),
 
-    path('main/login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('main/login/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    # path('main/login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('main/login/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('main/login/', custom_auth.views.LoginViewSet.as_view({'post': 'login'})),
+
     path('main/ibeeam_admin/', ibeeam_site.urls),
 
     path('main/', include('main.urls')),

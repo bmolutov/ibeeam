@@ -59,10 +59,11 @@ class PostListSerializer(serializers.Serializer): # noqa
     #     allow_empty_file=True,
     #     allow_null=True
     # )
-    image = serializers.CharField(
-        max_length=1024,
-        required=False
-    )
+    # ???
+    # image = serializers.CharField(
+    #     max_length=1024,
+    #     required=False
+    # )
     title = serializers.CharField(
         max_length=256
     )

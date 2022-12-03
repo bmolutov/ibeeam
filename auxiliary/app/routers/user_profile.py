@@ -41,6 +41,9 @@ async def get_user_profile(username: str, current_user=Depends(get_current_user)
 @router.post('/', response_description="Create user profile",
              response_model=CreateUserProfileResponseSchema)
 async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Body(...)):
+    # TODO: sending plan pass? is it safe?
+    user_password = user_profile.password
+
     # hashing password
     import hashing
     user_profile.password = hashing.bcrypt(user_profile.password)
@@ -61,7 +64,7 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     # TODO: resolve issue with encryption of password
     is_deleted_sync, message = create_user(
         created_user_profile['username'],
-        user_profile['password']
+        user_password
     )
     logging.info(is_deleted_sync, message)
     return created_user_profile
