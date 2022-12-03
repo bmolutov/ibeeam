@@ -1,32 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager
-)
 from django.conf import settings
-
-
-class UserManager(BaseUserManager):
-    def create_user(self, profile_id, password=None):
-        if not profile_id:
-            raise ValueError('Users must have a profile_id')
-
-        user = self.model(
-            profile_id=profile_id
-        )
-
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, profile_id, password=None):
-        user = self.create_user(
-            profile_id=profile_id,
-            password=password
-        )
-        user.is_staff = True
-        user.is_superuser = True
-        user.save(using=self._db)
-        return user
 
 
 class UserSearchHistory(models.Model):

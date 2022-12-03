@@ -5,13 +5,14 @@ MAIN_SERVICE_URL = str(os.getenv('MAIN_SERVICE_URL_DEV')) \
     if bool(os.getenv('AUX_DEBUG')) else str(os.getenv('MAIN_SERVICE_URL_PROD'))
 
 
-def create_user(profile_id: str):
+def create_user(username: str, password: str):
     is_deleted_sync = True
     try:
         response = requests.post(
-            url=f'{MAIN_SERVICE_URL}/custom_auth/integration/create_user/',
+            url=f'{MAIN_SERVICE_URL}/integration/create_user/',
             json={
-                'profile_id': profile_id
+                'username': username,
+                'password': password
             }
         )
         response.raise_for_status()
@@ -23,11 +24,11 @@ def create_user(profile_id: str):
     return is_deleted_sync, message
 
 
-def delete_user(profile_id: str):
+def delete_user(username: str):
     is_deleted_sync = True
     try:
         response = requests.delete(
-            url=f'{MAIN_SERVICE_URL}/custom_auth/integration/delete_user/{profile_id}'
+            url=f'{MAIN_SERVICE_URL}/integration/delete_user/{username}'
         )
         response.raise_for_status()
         message = response.text

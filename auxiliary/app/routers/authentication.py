@@ -10,6 +10,7 @@ from token_ import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 
 
 router = APIRouter(
+    prefix='/aux',
     tags=['Authentication']
 )
 
@@ -20,7 +21,7 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
     if not user_profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Invalid user_id"
+            detail=f"Invalid username"
         )
     if not verify(user_profile['password'], request.password):
         raise HTTPException(
@@ -31,6 +32,6 @@ async def login(request: OAuth2PasswordRequestForm = Depends()):
     # generate a jwt token and return it
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(GetUserProfileSchema(**user_profile).id)}, expires_delta=access_token_expires
+        data={"sub": str(GetUserProfileSchema(**user_profile).username)}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}

@@ -17,9 +17,9 @@ def list_user_profiles():
     return response.text
 
 
-def get_user_profile(profile_id: str):
+def get_user_profile(username: str):
     response = requests.get(
-        url=f'{AUXILIARY_SERVICE_URL}/get_user_profile/{profile_id}'
+        url=f'{AUXILIARY_SERVICE_URL}/get_user_profile/{username}'
     )
     return response.text
 
@@ -32,23 +32,23 @@ def create_user_profile(user_profile_data: dict):
     return response.text
 
 
-def update_user_profile(profile_id: str, user_profile_data):
+def update_user_profile(username: str, user_profile_data):
     response = requests.put(
-        url=f'{AUXILIARY_SERVICE_URL}/update_user_profile/{profile_id}',
+        url=f'{AUXILIARY_SERVICE_URL}/update_user_profile/{username}',
         json=user_profile_data
     )
     return response.text
 
 
-def delete_user_profile(profile_id: str):
+def delete_user_profile(username: str):
     response = requests.delete(
-        url=f'{AUXILIARY_SERVICE_URL}/delete_user_profile/{profile_id}'
+        url=f'{AUXILIARY_SERVICE_URL}/delete_user_profile/{username}'
     )
     return response.text
 
 
-def get_favorite_posts_ids(profile_id: str):
+def get_favorite_posts_ids(username: str):
     response = requests.get(
-        url=f'{AUXILIARY_SERVICE_URL}/integration/users/{profile_id}/favorite_posts_ids'
+        url=f'{AUXILIARY_SERVICE_URL}/integration/users/{username}/favorite_posts_ids'
     )
     return response.json()

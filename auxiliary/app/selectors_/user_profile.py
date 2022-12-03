@@ -4,8 +4,8 @@ from schemas import ListUserProfilesSchema
 from database import user_profiles_collection
 
 
-async def get_user_profile(user_id: str):
-    query = {"_id": ObjectId(user_id)}
+async def get_user_profile(username: str):
+    query = {"username": username}
     user_profile = await user_profiles_collection.find_one(query)
     return user_profile
 

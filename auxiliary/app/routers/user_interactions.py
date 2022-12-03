@@ -7,93 +7,121 @@ from oauth2 import get_current_user
 
 
 router = APIRouter(
-    prefix='/user_interactions',
+    prefix='/aux/user_interactions',
     tags=['User interactions']
 )
 
 
-@router.post('/follow/{_id}', response_description="Follow user")
-async def follow_user(user_id: str, current_user=Depends(get_current_user)):
-    user_to_follow = await selectors_.get_user_profile(user_id)
+@router.post('/follow/{username}', response_description="Follow user")
+async def follow_user(username: str, current_user=Depends(get_current_user)):
+    user_to_follow = await selectors_.get_user_profile(username)
     if not user_to_follow:
-        return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
-    user_to_follow['followers_ids'].append(current_user.user_id)
-    await services_.update_user_profile(user_to_follow['_id'], user_to_follow)
+        return JSONResponse(content=f"User with username={username} not found", status_code=status.HTTP_404_NOT_FOUND)
 
-    cur_user = await selectors_.get_user_profile(current_user.user_id)
-    cur_user['following_ids'].append(user_id)
-    await services_.update_user_profile(cur_user['_id'], cur_user)
+    # user cannot follow himself/herself
+    if current_user.username == username:
+        return JSONResponse(content="You cannot follow yourself", status_code=status.HTTP_400_BAD_REQUEST)
+
+    # if already followed
+    if current_user.username in user_to_follow['followers']:
+        return JSONResponse(content=f"Already followed to username={username}", status_code=status.HTTP_400_BAD_REQUEST)
+
+    # if everything is ok do follow
+    user_to_follow['followers'].append(current_user.username)
+    await services_.update_user_profile(user_to_follow['username'], user_to_follow)
+
+    cur_user = await selectors_.get_user_profile(current_user.username)
+    cur_user['following'].append(username)
+    await services_.update_user_profile(cur_user['username'], cur_user)
+
+    return JSONResponse(content=f"Successfully done", status_code=status.HTTP_200_OK)
 
 
-@router.post('/unfollow/{_id}', response_description='Unfollow user')
-async def unfollow_user(user_id: str, current_user=Depends(get_current_user)):
-    user_to_unfollow = await selectors_.get_user_profile(user_id)
+@router.post('/unfollow/{username}', response_description='Unfollow user')
+async def unfollow_user(username: str, current_user=Depends(get_current_user)):
+    user_to_unfollow = await selectors_.get_user_profile(username)
     if not user_to_unfollow:
-        return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
+        return JSONResponse(content=f"User with username={username} not found", status_code=status.HTTP_404_NOT_FOUND)
     try:
-        user_to_unfollow['followers_ids'].remove(current_user.user_id)
-        await services_.update_user_profile(user_to_unfollow['_id'], user_to_unfollow)
+        user_to_unfollow['followers'].remove(current_user.username)
+        await services_.update_user_profile(user_to_unfollow['username'], user_to_unfollow)
     except ValueError:
         return JSONResponse(content=f"Cannot unfollow")
 
-    cur_user = await selectors_.get_user_profile(current_user.user_id)
+    cur_user = await selectors_.get_user_profile(current_user.username)
     try:
-        cur_user['following_ids'].remove(user_id)
-        await services_.update_user_profile(cur_user['_id'], cur_user)
+        cur_user['following'].remove(username)
+        await services_.update_user_profile(cur_user['username'], cur_user)
     except ValueError:
         return JSONResponse(content=f"Cannot unfollow")
 
+    return JSONResponse(content=f"Successfully done", status_code=status.HTTP_200_OK)
 
-@router.post('/block/{_id}', response_description="Block user")
-async def block_user(user_id: str, current_user=Depends(get_current_user)):
-    user_to_block = await selectors_.get_user_profile(user_id)
+
+@router.post('/block/{username}', response_description="Block user")
+async def block_user(username: str, current_user=Depends(get_current_user)):
+    user_to_block = await selectors_.get_user_profile(username)
     if not user_to_block:
-        return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
-    user_to_block['blockers_ids'].append(current_user.user_id)
-    await services_.update_user_profile(user_to_block['_id'], user_to_block)
+        return JSONResponse(content=f"User with username={username} not found", status_code=status.HTTP_404_NOT_FOUND)
 
-    cur_user = await selectors_.get_user_profile(current_user.user_id)
-    cur_user['blocking_ids'].append(user_id)
-    await services_.update_user_profile(cur_user['_id'], cur_user)
+    # user cannot follow himself/herself
+    if current_user.username == username:
+        return JSONResponse(content=f"You cannot block yourself", status_code=status.HTTP_400_BAD_REQUEST)
+
+    # check if already blocked
+    if current_user.username in user_to_block['blockers']:
+        return JSONResponse(content=f"Already blocked username={username}", status_code=status.HTTP_400_BAD_REQUEST)
+
+    # if everything is ok do block
+    user_to_block['blockers'].append(current_user.username)
+    await services_.update_user_profile(user_to_block['username'], user_to_block)
+
+    cur_user = await selectors_.get_user_profile(current_user.username)
+    cur_user['blocking'].append(username)
+    await services_.update_user_profile(cur_user['username'], cur_user)
+
+    return JSONResponse(content=f"Successfully done", status_code=status.HTTP_200_OK)
 
 
-@router.post('/unblock/{_id}', response_description='Unblock user')
-async def unblock_user(user_id: str, current_user=Depends(get_current_user)):
-    user_to_unblock = await selectors_.get_user_profile(user_id)
+@router.post('/unblock/{username}', response_description='Unblock user')
+async def unblock_user(username: str, current_user=Depends(get_current_user)):
+    user_to_unblock = await selectors_.get_user_profile(username)
     if not user_to_unblock:
-        return JSONResponse(content=f"User with ID={user_id} not found", status_code=status.HTTP_404_NOT_FOUND)
+        return JSONResponse(content=f"User with username={username} not found", status_code=status.HTTP_404_NOT_FOUND)
     try:
-        user_to_unblock['blockers_ids'].remove(current_user.user_id)
-        await services_.update_user_profile(user_to_unblock['_id'], user_to_unblock)
+        user_to_unblock['blockers'].remove(current_user.username)
+        await services_.update_user_profile(user_to_unblock['username'], user_to_unblock)
     except ValueError:
         return JSONResponse(content=f"Cannot unblock")
 
-    cur_user = await selectors_.get_user_profile(current_user.user_id)
+    cur_user = await selectors_.get_user_profile(current_user.username)
     try:
-        cur_user['blocking_ids'].remove(user_id)
-        await services_.update_user_profile(cur_user['_id'], cur_user)
+        cur_user['blocking'].remove(username)
+        await services_.update_user_profile(cur_user['username'], cur_user)
     except ValueError:
         return JSONResponse(content=f"Cannot unblock")
 
+    return JSONResponse(content=f"Successfully done", status_code=status.HTTP_200_OK)
 
-@router.post('/users/{user_id}/favorite_posts/add/{post_id}',
+
+@router.post('/users/{username}/favorite_posts/add/{post_id}',
              response_description='add post to favorites')
-async def add_post_to_favorites(user_id: str, post_id: int):
+async def add_post_to_favorites(username: str, post_id: int):
     # TODO: does post with ID: post_id exist? is it worth checking?
-    cur_user = await selectors_.get_user_profile(user_id)
-    cur_user['favorite_posts_ids'].append(post_id)
-    await services_.update_user_profile(cur_user['_id'], cur_user)
+    cur_user = await selectors_.get_user_profile(username)
+    cur_user['favorite_posts'].append(username)
+    await services_.update_user_profile(cur_user['username'], cur_user)
 
 
-@router.post('/users/{user_id}/favorite_posts/remove/{post_id}',
+@router.post('/users/{username}/favorite_posts/remove/{post_id}',
              response_description='remove post from favorites')
-async def remove_post_from_favorites(user_id: str, post_id: int):
-    cur_user = await selectors_.get_user_profile(user_id)
+async def remove_post_from_favorites(username: str, post_id: int):
+    cur_user = await selectors_.get_user_profile(username)
     if not cur_user:
         return JSONResponse(content="User not found", status_code=status.HTTP_404_NOT_FOUND)
     try:
-        cur_user['favorite_posts_ids'].remove(post_id)
-        await services_.update_user_profile(cur_user['_id'], cur_user)
+        cur_user['favorite_posts'].remove(post_id)
+        await services_.update_user_profile(cur_user['username'], cur_user)
     except ValueError:
         return JSONResponse(content=f"Cannot remove from favorites")
     return JSONResponse(content=f"Removed successfully")
