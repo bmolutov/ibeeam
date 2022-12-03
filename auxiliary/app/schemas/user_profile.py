@@ -1,13 +1,11 @@
 from typing import Optional, List
 from datetime import date
 
-from bson import ObjectId
-from pydantic import BaseModel, HttpUrl, Field
-from .base import PyObjectId, GenderEnum
+from pydantic import BaseModel, HttpUrl
+from .base import GenderEnum
 
 
 class UserProfileBaseSchema(BaseModel):
-    username: str
     email: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
@@ -16,10 +14,10 @@ class UserProfileBaseSchema(BaseModel):
     bio: Optional[str]
     date_of_birth: Optional[date]
     # special fields:
-    followers_ids: List[str] = []
-    following_ids: List[str] = []
-    blockers_ids: List[str] = []
-    blocking_ids: List[str] = []
+    followers: List[str] = []
+    following: List[str] = []
+    blockers: List[str] = []
+    blocking: List[str] = []
     favorite_posts_ids: List[int] = []
 
 
@@ -27,37 +25,18 @@ class ListUserProfilesSchema(BaseModel):
     username: str
     avatar: Optional[HttpUrl]
 
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: str
-        }
-
 
 class GetUserProfileSchema(UserProfileBaseSchema):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: str
-        }
+    username: str
 
 
 class CreateUserProfileRequestSchema(UserProfileBaseSchema):
+    username: str
     password: str
 
 
 class CreateUserProfileResponseSchema(UserProfileBaseSchema):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: str
-        }
+    username: str
 
 
 class UpdateUserProfileRequestSchema(UserProfileBaseSchema):
@@ -65,10 +44,4 @@ class UpdateUserProfileRequestSchema(UserProfileBaseSchema):
 
 
 class UpdateUserProfileResponseSchema(UserProfileBaseSchema):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: str
-        }
+    username: str

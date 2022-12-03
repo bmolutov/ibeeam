@@ -30,9 +30,9 @@ async def list_user_profiles():
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=f"something went wrong...")
 
 
-@router.get('/{_id}', response_description="Get user profile", response_model=GetUserProfileSchema)
-async def get_user_profile(user_id: str, current_user=Depends(get_current_user)):
-    user_profile = await selectors_.get_user_profile(user_id)
+@router.get('/{username}', response_description="Get user profile", response_model=GetUserProfileSchema)
+async def get_user_profile(username: str, current_user=Depends(get_current_user)):
+    user_profile = await selectors_.get_user_profile(username)
     if user_profile:
         return user_profile
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=f"something went wrong...")
@@ -45,10 +45,15 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     import hashing
     user_profile.password = hashing.bcrypt(user_profile.password)
     user_profile = jsonable_encoder(user_profile)
+
+    # check if user with the username already exists
+    if await selectors_.get_user_profile(user_profile['username']):
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
+                            content=f"user with the give username already exists")
+
     # performing create
-    new_user_profile = await services_.create_user_profile(user_profile)
-    created_user_profile = await database.user_profiles_collection.find_one({"_id": ObjectId(
-        new_user_profile.inserted_id)})
+    await services_.create_user_profile(user_profile)
+    created_user_profile = await database.user_profiles_collection.find_one({"username": user_profile['username']})
     created_user_profile['_id'] = str(created_user_profile['_id'])
 
     # TODO: give condition
@@ -58,22 +63,24 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     return created_user_profile
 
 
-@router.put("/{_id}", response_description="Update user profile",
+@router.put("/{username}", response_description="Update user profile",
             response_model=UpdateUserProfileResponseSchema)
-async def update_user_profile(user_id: str, user_profile: UpdateUserProfileRequestSchema,
+async def update_user_profile(username: str, user_profile: UpdateUserProfileRequestSchema,
                               current_user=Depends(get_current_user)):
     user_profile = jsonable_encoder(user_profile)
-    updated_user_profile = await services_.update_user_profile(user_id, user_profile)
+    updated_user_profile = await services_.update_user_profile(username, user_profile)
     if updated_user_profile:
         return updated_user_profile
     return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content=f"something went wrong...")
 
 
-@router.delete("/{_id}", response_description="Delete user profile")
-async def delete_user_profile(user_id: str, current_user=Depends(get_current_user)):
-    is_deleted = await services_.delete_user_profile(user_id)
+@router.delete("/{username}", response_description="Delete user profile")
+async def delete_user_profile(username: str, current_user=Depends(get_current_user)):
+    is_deleted = await services_.delete_user_profile(username)
     if is_deleted:
-        from integration import delete_user
-        result, message = delete_user(user_id)
+        # TODO: fix sync
+        # from integration import delete_user
+        # result, message = delete_user(username)
+        result, message = 0, 0
         return JSONResponse(content=f"Is deleted successfully = {result}, message = {message}")
     return JSONResponse(content=f"There is no object with such ID")

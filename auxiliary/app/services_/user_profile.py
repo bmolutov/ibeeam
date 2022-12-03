@@ -8,15 +8,14 @@ async def create_user_profile(user_profile):
     return user_profile
 
 
-async def update_user_profile(user_id, user_profile):
-    await user_profiles_collection.update_one({"_id": ObjectId(user_id)}, {"$set": user_profile})
-    f = {"_id": 0}
+async def update_user_profile(username, user_profile):
+    await user_profiles_collection.update_one({"username": username}, {"$set": user_profile})
     # TODO: resolve an issue
-    updated_user_profile = await user_profiles_collection.find_one({"_id": ObjectId(user_id)}, f)
+    updated_user_profile = await user_profiles_collection.find_one({"username": username})
     return updated_user_profile
 
 
-async def delete_user_profile(user_id):
+async def delete_user_profile(username):
     # TODO: finish implementing
-    await user_profiles_collection.delete_one({"_id": ObjectId(user_id)})
+    await user_profiles_collection.delete_one({"username": username})
     return True
