@@ -4,7 +4,6 @@ import logging
 from fastapi import APIRouter, status, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from starlette.responses import JSONResponse
-from bson.json_util import ObjectId
 
 import services_
 import selectors_
@@ -58,11 +57,11 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     created_user_profile['_id'] = str(created_user_profile['_id'])
 
     # TODO: give condition
-    import os
     from integration import create_user
+    # TODO: resolve issue with encryption of password
     is_deleted_sync, message = create_user(
         created_user_profile['username'],
-        created_user_profile['password']
+        user_profile['password']
     )
     logging.info(is_deleted_sync, message)
     return created_user_profile
