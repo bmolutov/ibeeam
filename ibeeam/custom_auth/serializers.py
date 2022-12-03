@@ -7,3 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+
+class LoginSerializer(serializers.Serializer): # noqa
+    aux_token = serializers.CharField()
