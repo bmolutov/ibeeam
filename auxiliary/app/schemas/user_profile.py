@@ -24,6 +24,8 @@ class UserProfileBaseSchema(BaseModel):
 class ListUserProfilesSchema(BaseModel):
     username: str
     avatar: Optional[HttpUrl]
+    first_name: Optional[str]
+    last_name: Optional[str]
     password: str
 
 
