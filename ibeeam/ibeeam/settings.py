@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'django_celery_results',
     'mptt',
+    'corsheaders',
     # custom 
     'main.apps.MainConfig',
     'utils.apps.UtilsConfig',
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -212,3 +214,7 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
