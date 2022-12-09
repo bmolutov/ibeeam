@@ -6,7 +6,7 @@ from .base import GenderEnum
 
 
 class UserProfileBaseSchema(BaseModel):
-    email: Optional[str]
+    email: str
     first_name: Optional[str]
     last_name: Optional[str]
     avatar: Optional[HttpUrl]
@@ -23,6 +23,7 @@ class UserProfileBaseSchema(BaseModel):
 
 class ListUserProfilesSchema(BaseModel):
     username: str
+    email: str
     avatar: Optional[HttpUrl]
     first_name: Optional[str]
     last_name: Optional[str]

@@ -63,8 +63,9 @@ async def create_user_profile(user_profile: CreateUserProfileRequestSchema = Bod
     from integration import create_user
     # TODO: resolve issue with encryption of password
     is_deleted_sync, message = create_user(
-        created_user_profile['username'],
-        user_password
+        username=created_user_profile['username'],
+        email=created_user_profile['email'],
+        password=user_password,
     )
     logging.info(is_deleted_sync, message)
     return created_user_profile
