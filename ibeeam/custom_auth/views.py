@@ -16,7 +16,8 @@ class UserViewSet(viewsets.GenericViewSet):
     def create_user(self, request, *args, **kwargs):
         user = User.objects.create_user(
             username=self.request.data['username'],
-            password=self.request.data['password']
+            email=self.request.data['email'],
+            password=self.request.data['password'],
         )
         return Response(user.username, status=status.HTTP_201_CREATED)
 

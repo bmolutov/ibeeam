@@ -5,14 +5,15 @@ MAIN_SERVICE_URL = str(os.getenv('MAIN_SERVICE_URL_DEV')) \
     if bool(os.getenv('AUX_DEBUG')) else str(os.getenv('MAIN_SERVICE_URL_PROD'))
 
 
-def create_user(username: str, password: str):
+def create_user(username: str, email: str, password: str):
     is_deleted_sync = True
     try:
         response = requests.post(
             url=f'{MAIN_SERVICE_URL}/integration/create_user/',
             json={
                 'username': username,
-                'password': password
+                'email': email,
+                'password': password,
             }
         )
         response.raise_for_status()
