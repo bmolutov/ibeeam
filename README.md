@@ -7,7 +7,7 @@ Imangali Zhumash<br/> Bekzat Molutov<br/> Magzhan Zhumabekov
 2) Posts (CRUD)
 3) Search of posts
 4) Post/Comment reactions (like/dislike)
-5) Feedback
+5) Feedback (by anon/user)
  
 ### Auxiliary microservice functions
 1) User profile (CRUD)
